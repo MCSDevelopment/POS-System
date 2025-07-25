@@ -13,13 +13,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
 
-# Create database and tables
+# Create database and tables - runs on start to initualize before any requests are made
 with app.app_context():
     db.create_all()
 
+
 @app.route('/')
 def index():
-    return 
+    return ''
 
 @app.route('/add_test')
 def add_test():
