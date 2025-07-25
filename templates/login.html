@@ -1,11 +1,139 @@
 {% extends 'base.html' %}
 {% block content %}
-<div style="text-align: center; padding: 50px;">
+<!-- <div style="text-align: center; padding: 50px;">
     <h1>Restaurant POS Login</h1>
     <form>
         <input type="text" placeholder="Username" style="padding: 10px; margin: 10px;">
         <input type="password" placeholder="Password" style="padding: 10px; margin: 10px;">
         <button class="button-primary">Login</button>
     </form>
-</div>
+</div> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keypad Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .keypad-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .keypad-container h2 {
+            margin-bottom: 20px;
+        }
+        .pin-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 10px;
+        }
+        .keypad button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2a479d;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .keypad button:hover {
+            background-color: #0056b3;
+        }
+        .keypad button.clear {
+            background-color: #dc3545;
+        }
+        .keypad button.clear:hover {
+            background-color: #b02a37;
+        }
+        .keypad button.submit {
+            background-color: #28a745;
+        }
+        .keypad button.submit:hover {
+            background-color: #1e7e34;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        /* Dark theme support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333;
+                color: #f0f0f0;
+            }
+            .keypad-container {
+                background-color: #444;
+            }
+            .pin-input {
+                background-color: #555;
+                color: #f0f0f0;
+                border-color: #666;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="keypad-container">
+        <h2>Enter PIN</h2>
+        <form id="pin-form" method="POST" action="{{ url_for('login') }}">
+            <input type="password" id="pin-input" name="pin" class="pin-input" readonly>
+            <div class="keypad">
+                <button type="button" onclick="appendNumber('1')">1</button>
+                <button type="button" onclick="appendNumber('2')">2</button>
+                <button type="button" onclick="appendNumber('3')">3</button>
+                <button type="button" onclick="appendNumber('4')">4</button>
+                <button type="button" onclick="appendNumber('5')">5</button>
+                <button type="button" onclick="appendNumber('6')">6</button>
+                <button type="button" onclick="appendNumber('7')">7</button>
+                <button type="button" onclick="appendNumber('8')">8</button>
+                <button type="button" onclick="appendNumber('9')">9</button>
+                <button type="button" class="clear" onclick="clearPin()">Clear</button>
+                <button type="button" onclick="appendNumber('0')">0</button>
+                <button type="submit" class="submit">Submit</button>
+            </div>
+            {% if request.args.get('error') %}
+                <p class="error">{{ request.args.get('error') }}</p>
+            {% endif %}
+        </form>
+    </div>
+    <script>
+        function appendNumber(number) {
+            const pinInput = document.getElementById('pin-input');
+            if (pinInput.value.length < 4) { // Limit to 4 digits
+                pinInput.value += number;
+            }
+        }
+
+        function clearPin() {
+            document.getElementById('pin-input').value = '';
+        }
+    </script>
+</body>
+</html>
+
 {% endblock %}

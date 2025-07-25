@@ -1,4 +1,6 @@
+import os
+
 class Config:
-    SECRET_KEY = 'your-secret-key'  # Replace with a secure key
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///pos.db'  # SQLite for testing
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'mydatabase.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
