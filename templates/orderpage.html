@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .order-page {
+        display: flex;
+        height: 90vh;
+        padding: 20px;
+    }
+
+    .menu-section {
+        flex: 0 0 80%;
+        padding-right: 20px;
+        border-right: 2px solid #ccc;
+    }
+
+    .order-summary {
+        flex: 0 0 20%;
+        padding-left: 20px;
+    }
+
+    .menu-item {
+        margin-bottom: 10px;
+    }
+
+    .menu-item button {
+        margin-left: 10px;
+        padding: 5px 10px;
+    }
+
+    .order-total {
+        font-weight: bold;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+
+<div class="order-page">
+    <!-- Left side: Menu -->
+    <div class="menu-section">
+        <h2>Menu</h2>
+        <div class="menu-item">
+            Burger - $8
+            <button onclick="addToOrder('Burger', 8)">Add</button>
+        </div>
+        <div class="menu-item">
+            Fries - $3
+            <button onclick="addToOrder('Fries', 3)">Add</button>
+        </div>
+        <div class="menu-item">
+            Soda - $2
+            <button onclick="addToOrder('Soda', 2)">Add</button>
+        </div>
+        <div class="menu-item">
+            Salad - $6
+            <button onclick="addToOrder('Salad', 6)">Add</button>
+        </div>
+        <!-- Add more items as needed -->
+    </div>
+
+    <!-- Right side: Order summary -->
+    <div class="order-summary">
+        <h2>Current Order</h2>
+        <ul id="order-list"></ul>
+        <div class="order-total">
+            Total: $<span id="total">0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let total = 0;
+
+    function addToOrder(item, price) {
+        const orderList = document.getElementById('order-list');
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item} - $${price}`;
+        orderList.appendChild(listItem);
+
+        total += price;
+        document.getElementById('total').textContent = total.toFixed(2);
+    }
+</script>
+{% endblock %}

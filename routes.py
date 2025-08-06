@@ -22,8 +22,11 @@ def register_routes(app):
         
     @app.route('/login')
     def login():
-
-        return  render_template("login.html")
+        return render_template("login.html")
       
         
+    @app.route('/orderpage')
+    def orderpage():
+        return render_template("orderpage.html")
+      
         
