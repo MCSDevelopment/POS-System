@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Sign Up</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Account Name" class="input-field" required>
+        <input type="password" name="pin" maxlength="4" pattern="\d{4}" placeholder="4-digit PIN" class="input-field" required>
+        <button type="submit" class="submit-btn">Sign Up</button>
+    </form>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    .form-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #2a479d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .error {
+        color: red;
+        margin-bottom: 15px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+
+        .form-container {
+            background-color: #444;
+        }
+
+        .input-field {
+            background-color: #555;
+            color: #f0f0f0;
+            border-color: #666;
+        }
+    }
+</style>
+{% endblock %}
