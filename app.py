@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_migrate import Migrate
+from flask import Migrate
 from config import Config
 from models import db
 from routes import register_routes
