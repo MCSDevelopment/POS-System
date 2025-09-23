@@ -5,3 +5,8 @@ def init_routes(app):
     def index():
         return render_template('login.html')
     
+def init_routes(app):
+    @app.route('/signup')
+    def signup():
+        return render_template('signup.html')
+    

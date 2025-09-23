@@ -30,5 +30,13 @@ def add_test():
         db.session.commit()
     return 'Test user added!'
 
+
+# show all tests
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

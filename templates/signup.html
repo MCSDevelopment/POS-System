@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up - Retail POS</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1193d4",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              "display": ["Inter"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .form-input::placeholder {
+        color: #9ca3af;
+      }
+      .dark .form-input::placeholder {
+        color: #4b5563;
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="flex min-h-screen w-full items-center justify-center p-4">
+<div class="w-full max-w-md space-y-8">
+<div class="text-center">
+<div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20">
+<svg class="h-6 w-6" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Create your POS Account</h1>
+<p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Fast, efficient, and built for retail.</p>
+</div>
+<div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-background-dark sm:p-8">
+<form class="space-y-6">
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="email">Email Address</label>
+<div class="mt-1">
+<input autocomplete="email" class="form-input block w-full appearance-none rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-slate-900 placeholder-slate-400 transition-colors duration-150 ease-in-out focus:border-primary focus:outline-none focus:ring-primary dark:border-slate-700 dark:text-white dark:focus:border-primary" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="password">Password</label>
+<div class="mt-1">
+<input autocomplete="new-password" class="form-input block w-full appearance-none rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-slate-900 placeholder-slate-400 transition-colors duration-150 ease-in-out focus:border-primary focus:outline-none focus:ring-primary dark:border-slate-700 dark:text-white dark:focus:border-primary" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="confirm-password">Confirm Password</label>
+<div class="mt-1">
+<input autocomplete="new-password" class="form-input block w-full appearance-none rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-slate-900 placeholder-slate-400 transition-colors duration-150 ease-in-out focus:border-primary focus:outline-none focus:ring-primary dark:border-slate-700 dark:text-white dark:focus:border-primary" id="confirm-password" name="confirm-password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div>
+<button class="flex w-full justify-center rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="submit">Sign Up</button>
+</div>
+</form>
+</div>
+<p class="text-center text-sm text-slate-600 dark:text-slate-400">
+          Already have an account?
+          <a class="font-medium text-primary hover:underline" href="#">Log in</a>
+</p>
+</div>
+</div>
+
+</body></html>
+
+{% endblock %}
