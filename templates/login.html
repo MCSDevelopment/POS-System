@@ -1,139 +1,86 @@
-{% extends 'base.html' %}
-{% block content %}
-<!-- <div style="text-align: center; padding: 50px;">
-    <h1>Restaurant POS Login</h1>
-    <form>
-        <input type="text" placeholder="Username" style="padding: 10px; margin: 10px;">
-        <input type="password" placeholder="Password" style="padding: 10px; margin: 10px;">
-        <button class="button-primary">Login</button>
-    </form>
-</div> -->
-
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keypad Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        .keypad-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        .keypad-container h2 {
-            margin-bottom: 20px;
-        }
-        .pin-input {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 60px);
-            gap: 10px;
-        }
-        .keypad button {
-            padding: 15px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            background-color: #2a479d;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .keypad button:hover {
-            background-color: #0056b3;
-        }
-        .keypad button.clear {
-            background-color: #dc3545;
-        }
-        .keypad button.clear:hover {
-            background-color: #b02a37;
-        }
-        .keypad button.submit {
-            background-color: #28a745;
-        }
-        .keypad button.submit:hover {
-            background-color: #1e7e34;
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-        /* Dark theme support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #333;
-                color: #f0f0f0;
-            }
-            .keypad-container {
-                background-color: #444;
-            }
-            .pin-input {
-                background-color: #555;
-                color: #f0f0f0;
-                border-color: #666;
-            }
-        }
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Retail POS - Login</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1193d4",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+<style>
+      .form-input::placeholder {
+        color: #888888;
+      }
+      .dark .form-input::placeholder {
+        color: #6a7175;
+      }
     </style>
 </head>
-<body>
-    <div class="keypad-container">
-        <h2>Enter PIN</h2>
-        <form id="pin-form" method="POST" action="{{ url_for('login') }}">
-            <input type="password" id="pin-input" name="pin" class="pin-input" readonly>
-            <div class="keypad">
-                <button type="button" onclick="appendNumber('1')">1</button>
-                <button type="button" onclick="appendNumber('2')">2</button>
-                <button type="button" onclick="appendNumber('3')">3</button>
-                <button type="button" onclick="appendNumber('4')">4</button>
-                <button type="button" onclick="appendNumber('5')">5</button>
-                <button type="button" onclick="appendNumber('6')">6</button>
-                <button type="button" onclick="appendNumber('7')">7</button>
-                <button type="button" onclick="appendNumber('8')">8</button>
-                <button type="button" onclick="appendNumber('9')">9</button>
-                <button type="button" class="clear" onclick="clearPin()">Clear</button>
-                <button type="button" onclick="appendNumber('0')">0</button>
-                <button type="submit" class="submit">Submit</button>
-            </div>
-            {% if request.args.get('error') %}
-                <p class="error">{{ request.args.get('error') }}</p>
-            {% endif %}
-        </form>
-    </div>
-    <script>
-        function appendNumber(number) {
-            const pinInput = document.getElementById('pin-input');
-            if (pinInput.value.length < 4) { // Limit to 4 digits
-                pinInput.value += number;
-            }
-        }
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 antialiased">
+<div class="flex min-h-screen flex-col items-center justify-center p-4">
+<div class="w-full max-w-md">
+<header class="mb-8 text-center">
+<div class="inline-flex items-center justify-center gap-3">
+<div class="w-8 h-8 text-slate-900 dark:text-white">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Retail POS</h1>
+</div>
+<p class="mt-2 text-lg text-slate-600 dark:text-slate-400">Welcome back! Please sign in.</p>
+</header>
+<main class="w-full space-y-6 rounded-lg bg-white dark:bg-slate-900/40 p-8 shadow-sm border border-slate-200 dark:border-slate-800">
+  <form class="space-y-6" method="POST" action="{{ url_for('login') }}">
 
-        function clearPin() {
-            document.getElementById('pin-input').value = '';
-        }
-    </script>
-</body>
-</html>
 
-{% endblock %}
+<div>
+  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="email"> Username or Email </label>
+  <div class="mt-1">
+  <input autocomplete="email" class="form-input block w-full rounded border-slate-300 bg-background-light dark:border-slate-700 dark:bg-background-dark dark:text-slate-200 focus:border-primary focus:ring-primary" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+  </div>
+</div>
+
+<div>
+  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="password"> Password </label>
+  <div class="mt-1">
+    <input autocomplete="current-password" class="form-input block w-full rounded border-slate-300 bg-background-light dark:border-slate-700 dark:bg-background-dark dark:text-slate-200 focus:border-primary focus:ring-primary" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+  </div>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-sm">
+<a class="font-medium text-primary hover:text-primary/80 transition-colors" href="#"> Forgot your password? </a>
+</div>
+</div>
+<div>
+<button class="flex w-full justify-center rounded bg-primary py-3 px-4 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors" type="submit">Log In</button>
+</div>
+</form>
+</main>
+<footer class="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+<p>
+            Don't have an account?
+            <a class="font-medium text-primary hover:text-primary/80 transition-colors" href="#">Sign Up</a>
+</p>
+</footer>
+</div>
+</div>
+
+</body></html>

@@ -36,7 +36,7 @@ def create_user():
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-    users_list = [{'id': user.id, 'name': user.name} for user in users]
+    users_list = [{ 'email': user.email,'id': user.id, 'name': user.name} for user in users]
     return jsonify(users_list)
 
 # READ - get a single user by ID
@@ -94,6 +94,44 @@ def signup():
     # GET request renders the signup form
     return render_template('signup.html')
 
+from flask import request, render_template, redirect, url_for, flash, session
+from models import User, db
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Basic validation
+        if not all([email, password]):
+            flash('Email and password are required!')
+            return redirect(url_for('login'))
+
+        # Check if user exists
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.check_password(password):
+            # Store session
+            session['user_id'] = user.id
+            session['user_name'] = user.name
+
+            flash(f'Welcome back, {user.name}!')
+            return redirect(url_for('order'))  # change to your dashboard/home
+        else:
+            flash('Invalid email or password')
+            return redirect(url_for('login'))
+
+    # GET request → show login page
+    return render_template('login.html')
+
+
+@app.route('/order')
+def order():
+    if 'user_id' not in session:
+        flash('Please log in first.')
+        return redirect(url_for('login'))
+    return render_template('order.html', name=session['user_name'])
 
 
 
