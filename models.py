@@ -24,3 +24,15 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+
+
+class Product(db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    price = db.Column(db.Float, nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"<Product {self.name}>"

@@ -1,175 +1,162 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Order Screen</title>
-<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
-<script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#1193d4",
-              "background-light": "#f6f7f8",
-              "background-dark": "#101c22",
-            },
-            fontFamily: {
-              display: ["Inter"],
-            },
-            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Screen</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1193d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            display: ["Inter"],
           },
         },
-      };
-    </script>
+      },
+    };
+  </script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
 <div class="flex h-screen w-full flex-col">
-<div class="grid grid-cols-12 flex-grow">
-<div class="col-span-3 bg-white dark:bg-background-dark/50 p-6 flex flex-col border-r border-gray-200 dark:border-gray-700">
-<h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Transaction</h2>
-<div class="flex-grow overflow-y-auto -mr-6 pr-6">
-<table class="w-full text-sm">
-<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-<tr class="flex items-center py-3">
-<td class="w-10 text-center font-bold">1x</td>
-<td class="flex-grow">Espresso</td>
-<td class="font-medium">$2.50</td>
-</tr>
-<tr class="flex items-center py-3">
-<td class="w-10 text-center font-bold">1x</td>
-<td class="flex-grow">Cappuccino</td>
-<td class="font-medium">$3.50</td>
-</tr>
-<tr class="flex items-center py-3">
-<td class="w-10 text-center font-bold">2x</td>
-<td class="flex-grow">Pastry</td>
-<td class="font-medium">$4.00</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pt-6 border-t border-gray-200 dark:border-gray-700 text-sm">
-<div class="flex justify-between mb-2">
-<span>Subtotal</span>
-<span class="font-medium text-gray-900 dark:text-white">$10.00</span>
-</div>
-<div class="flex justify-between mb-2">
-<span>Tax</span>
-<span class="font-medium text-gray-900 dark:text-white">$0.64</span>
-</div>
-<div class="flex justify-between mb-4 text-lg font-bold">
-<span class="text-gray-900 dark:text-white">Total</span>
-<span class="text-gray-900 dark:text-white">$10.64</span>
-</div>
-<div class="space-y-3">
-<button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Add Discount</button>
-<button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Loyalty</button>
-<button class="w-full h-12 rounded-lg bg-primary text-white font-bold text-lg">Pay</button>
-</div>
-</div>
-</div>
-<div class="col-span-9 flex flex-col p-6">
-<div class="flex items-center mb-6">
-<div class="relative flex-grow">
-<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</div>
-<input class="w-full h-12 pl-10 pr-4 rounded-lg bg-white dark:bg-background-dark/50 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search products..." type="search"/>
-</div>
-<div class="flex items-center ml-6">
-<img alt="User avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxoRSvFgDW0ikVY6-ohhmI3EryUW3YllRD_CV8Gje9eJoFBmTdPtNTSjwSAogARQYaGWDm0Do6yXjLTQ48AgMQcFf9km9eWxjYk17bUbeVuquX-Y2cUVVRYn2UcVzMOGh1-iz1N17kjPSvuKUDpMRUkAroaotJsoxuSFUnW6YZy7a7aW80mzoF2GGC9BNQhhqwnrVnvgm63opRVpjW29lwtExYhPxuIRzNUQqdKmcwSaZSpCkY1XQC_RN1TNz8OxQ1c-ssJljCBU8"/>
-</div>
-</div>
-<div class="border-b border-gray-200 dark:border-gray-700 mb-4">
-    
-  <nav aria-label="Tabs" class="-mb-px flex space-x-8">
-      
-    <a class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300 dark:hover:border-gray-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#"> All Items </a>
+  <div class="grid grid-cols-12 flex-grow">
 
-    <a aria-current="page" class="border-primary text-primary whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#"> Featured Items </a>
+    <!-- Left: Transaction / Cart -->
+    <div class="col-span-3 bg-white dark:bg-background-dark/50 p-6 flex flex-col border-r border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Transaction</h2>
 
-    <a class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300 dark:hover:border-gray-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#"> Inventory </a>
-    
-    <a class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300 dark:hover:border-gray-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#"> Customers </a>
+      <!-- Cart items -->
+      <div class="flex-grow overflow-y-auto -mr-6 pr-6">
+        <ul id="cart-items" class="space-y-3"></ul>
+      </div>
 
-  </nav>
-</div>
+      <!-- Totals -->
+      <div class="pt-6 border-t border-gray-200 dark:border-gray-700 text-sm">
+        <div class="flex justify-between mb-2">
+          <span>Subtotal</span>
+          <span id="cart-subtotal" class="font-medium text-gray-900 dark:text-white">$0.00</span>
+        </div>
+        <div class="flex justify-between mb-2">
+          <span>Tax (6%)</span>
+          <span id="cart-tax" class="font-medium text-gray-900 dark:text-white">$0.00</span>
+        </div>
+        <div class="flex justify-between mb-4 text-lg font-bold">
+          <span class="text-gray-900 dark:text-white">Total</span>
+          <span id="cart-total" class="text-gray-900 dark:text-white">$0.00</span>
+        </div>
 
-
-<div class="flex-grow overflow-y-auto -mx-3 px-3">
-
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-    <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-      <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6hsgxTaC4_ju1FH6cqVoRBdL5pbKv8w7UYA9zqorP5gYGsrOXiHmrV2U_EhJwTcSXrRFgg4TZRrg-oIxj4Bo-OhJzrs1GoqObjM1BAksobhIOhniopUA8hW0hhcy6phggQECbWd4NjXJpxnGfScFs4ABdPn_t8fxYPagYM7mJBU3Gd8IJTa545os8inY8-G-URHl4n__TTIpQNjvhJw7FUEL9MMzcOMPO8zy-YA_9YGQ2q7WqLM1bMKjxv2o87v-bxn57mzVOty0");'></div>
-      <div class="absolute inset-0 bg-black/20"></div>
-    <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Espresso</p>
+        <div class="space-y-3">
+          <button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Add Discount</button>
+          <button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Loyalty</button>
+          <button class="w-full h-12 rounded-lg bg-primary text-white font-bold text-lg">Pay</button>
+        </div>
+      </div>
     </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
 
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAQKdlHMM49DvikNUMJ0m3dGONLU4gnXHBcs4uC87ub3xUdgVssLp8vZUx-64_Z6NBrwmjF017EaSh9y8oP2EsEtCYDofTn-uE7HptxtDObpGfQtspVOi-2Sy23RVw-adyV65Mzy4Rzbfe9oG-6eX4GyiCUwwsaHRi8XLPxUK-lAj26T-Zq6l3TfSUr9s6n9yUXiAkKzddsNB7BPPmzYUZdyZuOSZYDOksZaSDognhSW-UXnnzi5xrAROu3Gj3WymGYWDz0Z7A2E8Q");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Cappuccino</p>
+    <!-- Right: Products -->
+    <div class="col-span-9 flex flex-col p-6">
+      <!-- Search + user -->
+      <div class="flex items-center mb-6">
+        <div class="relative flex-grow">
+          <input type="search" placeholder="Search products..." 
+                 class="w-full h-12 pl-10 pr-4 rounded-lg bg-white dark:bg-background-dark/50 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"/>
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flex items-center ml-6">
+          <img alt="User avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxoRSvFgDW0ikVY6-ohhmI3EryUW3YllRD_CV8Gje9eJoFBmTdPtNTSjwSAogARQYaGWDm0Do6yXjLTQ48AgMQcFf9km9eWxjYk17bUbeVuquX-Y2cUVVRYn2UcVzMOGh1-iz1N17kjPSvuKUDpMRUkAroaotJsoxuSFUnW6YZy7a7aW80mzoF2GGC9BNQhhqwnrVnvgm63opRVpjW29lwtExYhPxuIRzNUQqdKmcwSaZSpCkY1XQC_RN1TNz8OxQ1c-ssJljCBU8"/>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
+        <nav class="-mb-px flex space-x-8">
+          <a class="border-primary text-primary whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#">Featured Items</a>
+          <a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#">Inventory</a>
+          <a class="border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#">Customers</a>
+        </nav>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="flex-grow overflow-y-auto -mx-3 px-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          {% for product in products %}
+          <div 
+            class="group relative rounded-lg overflow-hidden cursor-pointer product"
+            data-name="{{ product.name }}"
+            data-price="{{ product.price }}"
+          >
+            <div class="w-full h-0 pb-[100%] bg-cover bg-center"
+                style="background-image: url('{{ product.image_url }}');"></div>
+            <div class="absolute inset-0 bg-black/20"></div>
+            <p class="absolute bottom-0 left-0 p-3 text-white font-bold">{{ product.name }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCBIiuA3BmPqyMR4bGCWy2cd2srcN7a6nMeORr-YQUhuFO0LOxLF-z1bCz6t2-r_1KHUq95Xn2JNKD4kz-kj-MTyG9kMW90CZQ6Nk86Q1voC9FcuOWytJKVUaJEpQSmYj8dQDFqMrjWVTIlB8Ixn_q8K63sn1eBot9st4zu3M0U2uEI5b5XPho-poKdDMbxPFg1qducRIWVGbpx8HSfHAM0RzHgVAsrKVngmWbjwCRR7ebJCbjboXAxhTfktpi16zu4sjmZjlEKmI");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Latte</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Iced Coffee</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Pastry</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDLD_S6LvEpZF9j_ER8EfiStDf3DFPwpFU2ulokzowa5A4gMHM2E2i2yXWiblv5hL6Xx8Dn6k0bJ_Do7V33qGNRpVvDz1OsTE4Sqw_jUIM-KoeVEF-qRggqsLjycTd2C3yQmb3htXY5cGeoIs-c0RgdfCOQILa9Gxb-8k1Z1gOKUzvKFTrbUuFM-BO1ao0cG2Hkf_J_4Q_fSKh1FgyCfpBWooTRTbAGUhIclBsSoze218tpVl1rvxx6Ip2vatEVXCZQtJOiroH3pvY");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Muffin</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBUgcACvHFdsdFCw7uKF-bm-zuEfGo1HTjrR1XcPP7KllRsTAIgmfTETXWkH_auiB-uJtebtWL9Ac44LsA8k-fARQVJ0DbLwEqEuXSyLswesJh5_8DHQJRi7zPEtdwxMTN2eDGa6KJEckX0IlZzFfcBaBJRTbbaR2vgjpH8E2Iv4wTVKhhPn0MUqoUvzOG42m4Y5KPRYzLEX7Nwo-QYUHIY2m9uCj6oxIfhP7zQEafQwQUmQK2u-7m139woR4MkfC9MO_9wAYVzlH8");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Sandwich</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3GLCmYSdCMRD7WUUjCtfexTQtFTk9EO6-PvEigv8vvxzqjMCnEqIYOQCBLJelNF_bssLe8HzkpKIzGXxqQUKIGk0HgjAUhmS-sYtEYrnHO7kLougVYyrqS4PGJc2rrbH5vMmVCmBHcmC35elc1_hsZghA-8J-83jWEzn-NBGidg6SQs_dZIsAhhMAXj-7ZNWPI3ztjx3bgWCpjr2hWytbMGInkvaxeGIFuEiC5GVGIRDnykg-oOZBV3cWyjRTJcjTHnnwS-02y0I");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Salad</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBLHgPig-E7q2Hc6Q6EvKI0JF37tYFymuwkPhZIGAXfLnEbFwxv8D1936K1EVLU1rhMvKdywSyvNrQ4nxU7XDlU4KclOP_kTQezTdEhRhu8ppahgNVzepxEUgpE6sL8tj_3wK1U7LLpUbiSkIyhQRWaXH14qqNKb5oaGIuqnzHm3fyePZDWJYW0mFzfpjKdjGH42EpmOK9SwBHPBZJZO7nwnEnEelQ48jVABII-l8PTU8QYkiu4UtrdC3RlLiBo1WYk7pOO97Ts1JE");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Juice</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAThR1uUDk76OKvHN8dvvG5XKvRYBNb8AHHFyVH9UjdhGms3530yCcwwtR-6vZhrgW-ytcPVGXWZs2mq0ZnvKLSquZOPkwKTIJctlB5ZHSOtG39EYHa1neINn3aqxPW-5pSclEh78YCc2k30PqvE1NA0ctvHop4QW6zdxUw-CxdGDi2596gRVzMTT2e80c3sFquqYr-ydLpP2c6kLSdN65Wb8H3VjRmZz_nnSEP0SVmuvOZh413XLcfOSDdylMsQ1dfSTkLmikFGF0");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Smoothie</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAyLDN1dGOWx0d2qiJDGCzjhQOzP9rm_Q-zAA8AfEqEsaqK_V1NbSu81OeedD8Inwa3y-LfcZiC4iJ-VjpvgwqjYpCym9brGh66J1bGg4NcVgKLhvaSFkY_L43zzxaOvA4YsuB11bgGVQYUhXYziKvO1pwlUP7WJFYge2L82m86i8L3sNkTFe9taMeS5lu8DKhLUb3tplyXXGnfG3XrBaq73Z_lHkcUsmfCuqRkHlzw8ZLaXhtL9V-7QuIO5-eaARBx-FLAU9EPMX8");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Water Bottle</p>
-  </div>
-  <div class="group relative rounded-lg overflow-hidden cursor-pointer">
-  <div class="w-full h-0 pb-[100%] bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCirjRhwmvBWdFQq-v75ZI6CmrFaYJ1xoVSWFcp5bzGIfTpVUCEo2zQ_zXtrRCjimPejzYjzG9nCe5crfO6KCDPg3B0HVNKNG8WNC5bzalrC18yQ7vOS_srG-OIj8W1kYZsZfkpTHULpdRMia6LM7hjr13ngPYlNhUjjCYFvjYsa1vc7B-QB7bf5nh761ObvxQpDqTVl9N69p-SgQeKMnQHvyB7cFTDhVwhdQJtCwvVFC9nAzitLxhgKPjoWzF1yzsiEcWVI3LGrxA");'></div>
-  <div class="absolute inset-0 bg-black/20"></div>
-  <p class="absolute bottom-0 left-0 p-3 text-white font-bold">Snack Bar</p>
-  </div>
-  </div>
-</div>
-</div>
-</div>
 </div>
 
-</body></html>
+<script>
+  let cart = {};
+
+  function addToCart(name, price) {
+    if (cart[name]) {
+      cart[name].count++;
+    } else {
+      cart[name] = { price: parseFloat(price), count: 1 };
+    }
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartItems = document.getElementById("cart-items");
+    const subtotalEl = document.getElementById("cart-subtotal");
+    const taxEl = document.getElementById("cart-tax");
+    const totalEl = document.getElementById("cart-total");
+
+    cartItems.innerHTML = "";
+    let subtotal = 0;
+
+    for (let name in cart) {
+      const item = cart[name];
+      const itemTotal = item.price * item.count;
+      subtotal += itemTotal;
+
+      const li = document.createElement("li");
+      li.className = "flex justify-between";
+      li.innerHTML = `<span>${item.count}x ${name}</span><span>$${itemTotal.toFixed(2)}</span>`;
+      cartItems.appendChild(li);
+    }
+
+    const tax = subtotal * 0.06;
+    const total = subtotal + tax;
+
+    subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+    taxEl.innerText = `$${tax.toFixed(2)}`;
+    totalEl.innerText = `$${total.toFixed(2)}`;
+  }
+
+  // Attach click listeners to product cards
+  document.querySelectorAll(".product").forEach(el => {
+    el.addEventListener("click", () => {
+      const name = el.dataset.name;
+      const price = el.dataset.price;
+      addToCart(name, price);
+    });
+  });
+</script>
+</body>
+</html>
