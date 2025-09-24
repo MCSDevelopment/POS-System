@@ -94,6 +94,11 @@ def signup():
     # GET request renders the signup form
     return render_template('signup.html')
 
+
+@app.route('/inventory')
+def inventory():
+    return render_template('inventory.html')
+
 from flask import request, render_template, redirect, url_for, flash, session
 from models import User, db
 
@@ -135,10 +140,6 @@ def order():
     products = Product.query.all()
     return render_template('order.html', name=session['user_name'], products=products)
 
-@app.route('/menu')
-def menu():
-    products = Product.query.all()
-    return render_template('menu.html', products=products)
 
 @app.route('/products', methods=['GET'])
 def get_products():
