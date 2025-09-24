@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from flask_migrate import Migrate
 import os
-from models import db, User  # import shared db and User model
+from models import db, User, Product# import shared db and User model
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -131,7 +131,46 @@ def order():
     if 'user_id' not in session:
         flash('Please log in first.')
         return redirect(url_for('login'))
-    return render_template('order.html', name=session['user_name'])
+    
+    products = Product.query.all()
+    return render_template('order.html', name=session['user_name'], products=products)
+
+@app.route('/menu')
+def menu():
+    products = Product.query.all()
+    return render_template('menu.html', products=products)
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    products = Product.query.all()
+    return jsonify([
+        {
+            "id": p.id,
+            "name": p.name,
+            "price": p.price,
+            "image_url": p.image_url
+        }
+        for p in products
+    ])
+
+
+@app.route('/add_products')
+def add_products():
+    try:
+        products = [
+            Product(name="Espresso", price=2.50, image_url="https://...espresso-image-url..."),
+            Product(name="Cappuccino", price=3.50, image_url="https://...cappuccino-image-url..."),
+            Product(name="Latte", price=4.00, image_url="https://...latte-image-url..."),
+            Product(name="Iced Coffee", price=3.00, image_url="https://...icedcoffee-url..."),
+            Product(name="Pastry", price=2.00, image_url="https://...pastry-url..."),
+        ]
+        db.session.bulk_save_objects(products)
+        db.session.commit()
+        return "Products added!"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
 
 
 
