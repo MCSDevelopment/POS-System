@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import secrets
 from datetime import datetime
-from models import User, Product, db
+from models import User, Product, db, Order, OrderItem, Customer
 app = Flask(__name__)
 
 # Config
@@ -178,9 +178,125 @@ def inventory():
         current_category=category_filter
     )
 
+# --- PRODUCT ROUTES ---
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    if 'user_id' not in session or session['user_role'] not in ['admin', 'employee']:
+        flash('You are not authorized to add products.')
+        return redirect(url_for('inventory'))
+
+    name = request.form['name']
+    category = request.form['category']
+    stock = int(request.form['stock'])
+    last_restocked = datetime.strptime(request.form['last_restocked'], '%Y-%m-%dT%H:%M')
+    price = float(request.form['price'])
+    image_url = request.form['image_url']
+
+    new_product = Product(
+        name=name,
+        category=category,
+        stock=stock,
+        last_restocked=last_restocked,
+        price=price,
+        image_url=image_url
+    )
+    db.session.add(new_product)
+    db.session.commit()
+    return redirect(url_for('inventory'))
 
 
+# --- CUSTOMER ROUTES ---
+@app.route('/customers', methods=['POST'])
+def create_customer():
+    data = request.form
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    address = data.get('address')
+
+    if not name or not phone:
+        flash("Name and phone are required")
+        return redirect(url_for('order'))
+
+    customer = Customer(name=name, email=email, phone=phone, address=address)
+    db.session.add(customer)
+    db.session.commit()
+    flash("Customer created successfully!")
+    return redirect(url_for('order'))
 
 
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    customers = Customer.query.all()
+    return jsonify([
+        {
+            "id": c.id,
+            "name": c.name,
+            "email": c.email,
+            "phone": c.phone,
+            "points": c.loyalty_points
+        } for c in customers
+    ])
+
+
+# --- ORDER ROUTES ---
+@app.route('/create_order', methods=['POST'])
+def create_order():
+    data = request.json
+    customer_id = data.get('customer_id')
+    items = data.get('items', [])  # list of {product_id, quantity}
+
+    if not customer_id or not items:
+        return jsonify({"error": "Customer and items are required"}), 400
+
+    order = Order(customer_id=customer_id, status="pending")
+    total_price = 0.0
+
+    for item in items:
+        product = Product.query.get(item['product_id'])
+        if not product or product.stock < item['quantity']:
+            return jsonify({"error": f"Product {item['product_id']} unavailable"}), 400
+
+        # Deduct stock
+        product.stock -= item['quantity']
+
+        # Add to order
+        order_item = OrderItem(
+            order=order,
+            product=product,
+            quantity=item['quantity'],
+            price=product.price
+        )
+        total_price += product.price * item['quantity']
+        db.session.add(order_item)
+
+    order.total_price = total_price
+
+    # Add loyalty points (1 point per $1 spent for example)
+    customer = Customer.query.get(customer_id)
+    if customer:
+        customer.add_points(int(total_price))
+
+    db.session.add(order)
+    db.session.commit()
+
+    return jsonify({"message": "Order created", "order_id": order.id})
+
+
+@app.route('/orders/<int:customer_id>', methods=['GET'])
+def get_customer_orders(customer_id):
+    orders = Order.query.filter_by(customer_id=customer_id).all()
+    return jsonify([
+        {
+            "id": o.id,
+            "total_price": o.total_price,
+            "status": o.status,
+            "created_at": o.created_at,
+            "items": [
+                {"product": item.product.name, "qty": item.quantity, "price": item.price}
+                for item in o.items
+            ]
+        } for o in orders
+    ])
 if __name__ == '__main__':
     app.run(debug=True)
