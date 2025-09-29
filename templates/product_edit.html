@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Product - Retail POS</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1193d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+  <div class="flex min-h-screen w-full items-center justify-center p-4">
+    <div class="w-full max-w-md space-y-8">
+      
+      <!-- header icon + title -->
+      <div class="text-center">
+        <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Edit Product</h1>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Update details for {{ product.name }}</p>
+      </div>
+
+      <!-- form card -->
+      <div class="space-y-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6 shadow-sm sm:p-8">
+        <form class="space-y-6" method="POST">
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input type="text" name="name" value="{{ product.name }}" required
+              class="form-input block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:ring-primary"/>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stock</label>
+            <input type="number" name="stock" value="{{ product.stock }}" required
+              class="form-input block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:ring-primary"/>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
+            <input type="number" step="0.01" name="price" value="{{ product.price }}" required
+              class="form-input block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:ring-primary"/>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last Restocked</label>
+            <input type="date" name="last_restocked" value="{{ product.last_restocked.strftime('%Y-%m-%d') }}" required
+              class="form-input block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary focus:ring-primary"/>
+          </div>
+
+          <!-- button -->
+          <div>
+            <button type="submit"
+              class="flex w-full justify-center rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+              Update Product
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- back link -->
+      <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+        <a class="font-medium text-primary hover:underline" href="{{ url_for('inventory') }}">← Back to Inventory</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+
+{% endblock %}

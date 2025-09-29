@@ -1,60 +1,61 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from models import db, User, Product# import shared db and User model
-
+import secrets
+from datetime import datetime
+from models import User, Product, db, Order, OrderItem, Customer
 app = Flask(__name__)
+
+# Config
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'mydatabase.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = secrets.token_hex(16)
 
+# Initialize db + migrate
 
-import secrets
-app.secret_key = secrets.token_hex(16)  # generates a random 32-character hex string
-
-# Initialize db and migrate
-db.init_app(app)
+db.init_app(app) 
 migrate = Migrate(app, db)
 
+
+
+
+
+# ROUTES
 @app.route('/')
 def index():
-    return "Welcome to the User CRUD API!"
+    return render_template('signup.html')
 
-# CREATE - add a new user
+
+# --- USER ROUTES ---
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
     if not data or 'name' not in data:
         return jsonify({'error': 'Name is required'}), 400
     
-    new_user = User(name=data['name'])
+    new_user = User(name=data['name'], email=data.get('email', ''), pin=data.get('pin', '0000'))
+    if 'password' in data:
+        new_user.set_password(data['password'])
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'User created', 'user': {'id': new_user.id, 'name': new_user.name}}), 201
 
-# READ - get all users
+
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-    users_list = [{ 'email': user.email,'id': user.id, 'name': user.name} for user in users]
+    users_list = [{'id': u.id, 'name': u.name, 'email': u.email, 'role': u.role} for u in users]
     return jsonify(users_list)
 
-# READ - get a single user by ID
+
 @app.route('/oneusers/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = User.query.get_or_404(user_id)
-    return jsonify({'id': user.id, 'name': user.name})
+    return jsonify({'id': user.id, 'name': user.name, 'email': user.email, 'role': user.role})
 
-
-@app.route('/add_test')
-def add_test():
-    with app.app_context():
-        test_user = User(name='Test User')
-        db.session.add(test_user)
-        db.session.commit()
-    return 'Test user added!'
-
-from flask import request, redirect, url_for, flash
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -63,39 +64,30 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         pin = request.form.get('pin')
+        role = request.form.get('role', 'admin')
 
-        # Basic validation
         if not all([name, email, password, pin]):
             flash('All fields are required!')
             return redirect(url_for('signup'))
 
-        # Check if email already exists
         if User.query.filter_by(email=email).first():
             flash('Email already registered!')
             return redirect(url_for('signup'))
 
-        # Create user
-        new_user = User(
-            name=name,
-            email=email,
-            pin=pin
-        )
+        new_user = User(name=name, email=email, pin=pin, role=role)
         new_user.set_password(password)
 
         try:
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully!')
-            return redirect(url_for('login'))  # or wherever you want
+            return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
             return f'Error: {str(e)}'
 
-    # GET request renders the signup form
     return render_template('signup.html')
 
-from flask import request, render_template, redirect, url_for, flash, session
-from models import User, db
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,29 +95,25 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # Basic validation
         if not all([email, password]):
             flash('Email and password are required!')
             return redirect(url_for('login'))
 
-        # Check if user exists
         user = User.query.filter_by(email=email).first()
-
         if user and user.check_password(password):
-            # Store session
             session['user_id'] = user.id
             session['user_name'] = user.name
-
+            session['user_role'] = user.role
             flash(f'Welcome back, {user.name}!')
-            return redirect(url_for('order'))  # change to your dashboard/home
+            return redirect(url_for('order'))
         else:
             flash('Invalid email or password')
             return redirect(url_for('login'))
 
-    # GET request → show login page
     return render_template('login.html')
 
 
+# --- PRODUCT ROUTES ---
 @app.route('/order')
 def order():
     if 'user_id' not in session:
@@ -135,69 +123,243 @@ def order():
     products = Product.query.all()
     return render_template('order.html', name=session['user_name'], products=products)
 
-@app.route('/menu')
-def menu():
-    products = Product.query.all()
-    return render_template('menu.html', products=products)
 
 @app.route('/products', methods=['GET'])
 def get_products():
     products = Product.query.all()
     return jsonify([
-        {
-            "id": p.id,
-            "name": p.name,
-            "price": p.price,
-            "image_url": p.image_url
-        }
+        {"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "category": p.category, "image_url": p.image_url}
         for p in products
     ])
 
 
-@app.route('/add_products')
-def add_products():
+@app.route('/add_multiple_products')
+def add_multiple_products():
     try:
         products = [
-            Product(name="Espresso", price=2.50, image_url="https://...espresso-image-url..."),
-            Product(name="Cappuccino", price=3.50, image_url="https://...cappuccino-image-url..."),
-            Product(name="Latte", price=4.00, image_url="https://...latte-image-url..."),
-            Product(name="Iced Coffee", price=3.00, image_url="https://...icedcoffee-url..."),
-            Product(name="Pastry", price=2.00, image_url="https://...pastry-url..."),
+            Product(
+                name="Espresso",
+                category="Drink",
+                stock=10,
+                price=2.50,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
+            ),
+            Product(
+                name="Cappuccino",
+                category="Drink",
+                stock=15,
+                price=3.50,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
+            ),
+            Product(
+                name="Latte",
+                category="Drink",
+                stock=20,
+                price=4.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDLD_S6LvEpZF9j_ER8EfiStDf3DFPwpFU2ulokzowa5A4gMHM2E2i2yXWiblv5hL6Xx8Dn6k0bJ_Do7V33qGNRpVvDz1OsTE4Sqw_jUIM-KoeVEF-qRggqsLjycTd2C3yQmb3htXY5cGeoIs-c0RgdfCOQILa9Gxb-8k1Z1gOKUzvKFTrbUuFM-BO1ao0cG2Hkf_J_4Q_fSKh1FgyCfpBWooTRTbAGUhIclBsSoze218tpVl1rvxx6Ip2vatEVXCZQtJOiroH3pvY"
+            ),
+            Product(
+                name="Iced Coffee",
+                category="Drink",
+                stock=10,
+                price=3.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
+            ),
+            Product(
+                name="Pastry",
+                category="Food",
+                stock=30,
+                price=2.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
+            ),
         ]
+
         db.session.bulk_save_objects(products)
         db.session.commit()
         return "Products added!"
     except Exception as e:
+        db.session.rollback()
         return f"Error: {str(e)}"
 
 
 
 
 
-# UPDATE AND DELETE ARE NOT USEABLE IN BROWSER 
-# BROWSER ONLY SUPPORTS GET AND POST METHODS
+# --- INVENTORY PAGE ---
+@app.route('/inventory')
+def inventory():
+    if 'user_id' not in session:
+        flash('Please log in first.')
+        return redirect(url_for('login'))
 
-
-# # UPDATE - update a user by ID
-# @app.route('/updateusers/<int:user_id>', methods=['PUT'])
-# def update_user(user_id):
-#     user = User.query.get_or_404(user_id)
-#     data = request.get_json()
-#     if not data or 'name' not in data:
-#         return jsonify({'error': 'Name is required'}), 400
+    category_filter = request.args.get('category')
     
-#     user.name = data['name']
-#     db.session.commit()
-#     return jsonify({'message': 'User updated', 'user': {'id': user.id, 'name': user.name}})
+    if category_filter:
+        products = Product.query.filter_by(category=category_filter).all()
+    else:
+        products = Product.query.all()
+        category_filter = "Category"  # default text when no filter
 
-# # DELETE - delete a user by ID
-# @app.route('/deleteusers/<int:user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     user = User.query.get_or_404(user_id)
-#     db.session.delete(user)
-#     db.session.commit()
-#     return jsonify({'message': f'User {user_id} deleted'})
+    categories = sorted({product.category for product in Product.query.all()})
+    
+    return render_template(
+        'inventory.html', 
+        name=session['user_name'], 
+        products=products, 
+        categories=categories,
+        current_category=category_filter
+    )
 
+# --- PRODUCT ROUTES ---
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    if 'user_id' not in session or session['user_role'] not in ['admin', 'employee']:
+        flash('You are not authorized to add products.')
+        return redirect(url_for('inventory'))
+
+    name = request.form['name']
+    category = request.form['category']
+    stock = int(request.form['stock'])
+    last_restocked = datetime.strptime(request.form['last_restocked'], '%Y-%m-%dT%H:%M')
+    price = float(request.form['price'])
+    image_url = request.form['image_url']
+
+    new_product = Product(
+        name=name,
+        category=category,
+        stock=stock,
+        last_restocked=last_restocked,
+        price=price,
+        image_url=image_url
+    )
+    db.session.add(new_product)
+    db.session.commit()
+    return redirect(url_for('inventory'))
+
+# edit product form
+
+@app.route("/product/<int:product_id>/edit", methods=["GET", "POST"])
+def edit_product(product_id):
+    product = Product.query.get_or_404(product_id)
+
+    if request.method == "POST":
+        product.name = request.form["name"]
+        product.stock = int(request.form["stock"])   # convert to int
+        product.price = float(request.form["price"]) # convert to float
+
+        # Convert the string 'YYYY-MM-DD' into a Python date object
+        product.last_restocked = datetime.strptime(
+            request.form["last_restocked"], "%Y-%m-%d"
+        ).date()
+
+        db.session.commit()
+        return redirect(url_for("inventory"))
+
+    return render_template("product_edit.html", product=product)
+
+
+
+
+
+@app.route('/customers-page')
+def customers_page():
+    customers = Customer.query.all()
+    return render_template('customer.html', customers=customers)
+
+
+
+# --- CUSTOMER ROUTES ---
+@app.route('/customers', methods=['POST'])
+def create_customer():
+    data = request.form
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    address = data.get('address')
+
+    if not name or not phone:
+        flash("Name and phone are required")
+        return redirect(url_for('order'))
+
+    customer = Customer(name=name, email=email, phone=phone, address=address)
+    db.session.add(customer)
+    db.session.commit()
+    flash("Customer created successfully!")
+    return redirect(url_for('order'))
+
+
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    customers = Customer.query.all()
+    return jsonify([
+        {
+            "id": c.id,
+            "name": c.name,
+            "email": c.email,
+            "phone": c.phone,
+            "points": c.loyalty_points
+        } for c in customers
+    ])
+
+
+# --- ORDER ROUTES ---
+@app.route('/create_order', methods=['POST'])
+def create_order():
+    data = request.json
+    customer_id = data.get('customer_id')
+    items = data.get('items', [])  # list of {product_id, quantity}
+
+    if not customer_id or not items:
+        return jsonify({"error": "Customer and items are required"}), 400
+
+    order = Order(customer_id=customer_id, status="pending")
+    total_price = 0.0
+
+    for item in items:
+        product = Product.query.get(item['product_id'])
+        if not product or product.stock < item['quantity']:
+            return jsonify({"error": f"Product {item['product_id']} unavailable"}), 400
+
+        # Deduct stock
+        product.stock -= item['quantity']
+
+        # Add to order
+        order_item = OrderItem(
+            order=order,
+            product=product,
+            quantity=item['quantity'],
+            price=product.price
+        )
+        total_price += product.price * item['quantity']
+        db.session.add(order_item)
+
+    order.total_price = total_price
+
+    # Add loyalty points (1 point per $1 spent for example)
+    customer = Customer.query.get(customer_id)
+    if customer:
+        customer.add_points(int(total_price))
+
+    db.session.add(order)
+    db.session.commit()
+
+    return jsonify({"message": "Order created", "order_id": order.id})
+
+
+@app.route('/orders/<int:customer_id>', methods=['GET'])
+def get_customer_orders(customer_id):
+    orders = Order.query.filter_by(customer_id=customer_id).all()
+    return jsonify([
+        {
+            "id": o.id,
+            "total_price": o.total_price,
+            "status": o.status,
+            "created_at": o.created_at,
+            "items": [
+                {"product": item.product.name, "qty": item.quantity, "price": item.price}
+                for item in o.items
+            ]
+        } for o in orders
+    ])
 if __name__ == '__main__':
     app.run(debug=True)
-
