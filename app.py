@@ -26,7 +26,7 @@ migrate = Migrate(app, db)
 # ROUTES
 @app.route('/')
 def index():
-    return "Welcome to the POS System!"
+    return render_template('signup.html')
 
 
 # --- USER ROUTES ---
@@ -133,22 +133,54 @@ def get_products():
     ])
 
 
-# @app.route('/add_products')
-# def add_products():
-#     try:
-#         products = [
-#             Product(name="Espresso", category="Drink", stock=10, price=2.50, image_url="https://...espresso-image-url..."),
-#             Product(name="Cappuccino", category="Drink", stock=15, price=3.50, image_url="https://...cappuccino-image-url..."),
-#             Product(name="Latte", category="Drink", stock=20, price=4.00, image_url="https://...latte-image-url..."),
-#             Product(name="Iced Coffee", category="Drink", stock=10, price=3.00, image_url="https://...icedcoffee-url..."),
-#             Product(name="Pastry", category="Food", stock=30, price=2.00, image_url="https://...pastry-url..."),
-#         ]
-#         db.session.bulk_save_objects(products)
-#         db.session.commit()
-#         return "Products added!"
-#     except Exception as e:
-#         db.session.rollback()
-#         return f"Error: {str(e)}"
+@app.route('/add_multiple_products')
+def add_multiple_products():
+    try:
+        products = [
+            Product(
+                name="Espresso",
+                category="Drink",
+                stock=10,
+                price=2.50,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
+            ),
+            Product(
+                name="Cappuccino",
+                category="Drink",
+                stock=15,
+                price=3.50,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
+            ),
+            Product(
+                name="Latte",
+                category="Drink",
+                stock=20,
+                price=4.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDLD_S6LvEpZF9j_ER8EfiStDf3DFPwpFU2ulokzowa5A4gMHM2E2i2yXWiblv5hL6Xx8Dn6k0bJ_Do7V33qGNRpVvDz1OsTE4Sqw_jUIM-KoeVEF-qRggqsLjycTd2C3yQmb3htXY5cGeoIs-c0RgdfCOQILa9Gxb-8k1Z1gOKUzvKFTrbUuFM-BO1ao0cG2Hkf_J_4Q_fSKh1FgyCfpBWooTRTbAGUhIclBsSoze218tpVl1rvxx6Ip2vatEVXCZQtJOiroH3pvY"
+            ),
+            Product(
+                name="Iced Coffee",
+                category="Drink",
+                stock=10,
+                price=3.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
+            ),
+            Product(
+                name="Pastry",
+                category="Food",
+                stock=30,
+                price=2.00,
+                image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
+            ),
+        ]
+
+        db.session.bulk_save_objects(products)
+        db.session.commit()
+        return "Products added!"
+    except Exception as e:
+        db.session.rollback()
+        return f"Error: {str(e)}"
+
 
 
 
@@ -203,6 +235,37 @@ def add_product():
     db.session.add(new_product)
     db.session.commit()
     return redirect(url_for('inventory'))
+
+# edit product form
+
+@app.route("/product/<int:product_id>/edit", methods=["GET", "POST"])
+def edit_product(product_id):
+    product = Product.query.get_or_404(product_id)
+
+    if request.method == "POST":
+        product.name = request.form["name"]
+        product.stock = int(request.form["stock"])   # convert to int
+        product.price = float(request.form["price"]) # convert to float
+
+        # Convert the string 'YYYY-MM-DD' into a Python date object
+        product.last_restocked = datetime.strptime(
+            request.form["last_restocked"], "%Y-%m-%d"
+        ).date()
+
+        db.session.commit()
+        return redirect(url_for("inventory"))
+
+    return render_template("product_edit.html", product=product)
+
+
+
+
+
+@app.route('/customers-page')
+def customers_page():
+    customers = Customer.query.all()
+    return render_template('customer.html', customers=customers)
+
 
 
 # --- CUSTOMER ROUTES ---

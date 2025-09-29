@@ -60,7 +60,7 @@
           class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600 dark:text-gray-300"
         >
           <a class="hover:text-primary" href="order">Order</a>
-          <!-- <a class="hover:text-primary" href="products">Products</a> -->
+          <a class="hover:text-primary" href="products">Products</a>
           <a class="text-primary font-semibold" href="/inventory">Inventory</a>
           <a class="hover:text-primary" href="#">Customers</a>
           <a class="hover:text-primary" href="#">Reports</a>
@@ -103,9 +103,12 @@
             >
               Adjust Stock
             </button>
-            <button onclick="openModal()" class="bg-primary text-white font-semibold py-2 px-4 rounded-lg text-sm hover:opacity-90">
-              Add New Product
-            </button>
+            <h1 class="text-2xl font-bold mb-4">Customers</h1>
+
+                <!-- Button to open modal -->
+                <button onclick="openModal()" class="bg-primary text-white py-2 px-4 rounded mb-4">
+                Add New Customer
+                </button>
               
           </div>
         </div>
@@ -214,66 +217,61 @@
 </div>
 
 
-<!-- HIDDEM ADD NEW PRODUCT FEATURE -> shows after add new button clicked -->
-        <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        onclick="if(event.target === this) closeModal()">
-        
-          <div class="bg-white dark:bg-background-dark rounded-lg p-6 w-96">
-            <h2 class="text-xl font-bold mb-4">Add New Product</h2>
-            
-            <form method="POST" action="{{ url_for('add_product') }}">
-              <input type="text" name="name" placeholder="Item Name" required
-                    class="w-full mb-2 p-2 border rounded" />
 
-              <input type="text" name="category" placeholder="Category" required
-                    class="w-full mb-2 p-2 border rounded" />
-
-              <input type="number" name="stock" placeholder="Stock Quantity" required
-                    class="w-full mb-2 p-2 border rounded" />
-
-              <input type="datetime-local" name="last_restocked" placeholder="Last Restocked"
-                    class="w-full mb-2 p-2 border rounded" />
-
-              <input type="number" step="0.01" name="price" placeholder="Price" required
-                    class="w-full mb-2 p-2 border rounded" />
-
-              <input type="text" name="image_url" placeholder="Image URL"
-                    class="w-full mb-2 p-2 border rounded" />
-
-              <button type="submit" class="bg-primary text-white py-2 px-4 rounded mt-2 w-full">
-                Save
-              </button>
-              <button onclick="closeModal()" type="button" class="bg-primary text-white py-2 px-4 rounded mt-2 w-full">
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-
-
-            <!-- opening and closing add to new botton form -->
-        <script>
-          function openModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.remove('hidden');
-        
-            // Focus the first input inside the modal
-            const firstInput = modal.querySelector('input');
-            if (firstInput) firstInput.focus();
-          }
-        
-          function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add('hidden');
-          }
-        
-          // Escape key listener
-          document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape") {
-              closeModal();
-            }
-          });
-        </script>
+  
+  <!-- Customer Modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+       onclick="if(event.target === this) closeModal()">
+       
+    <div class="bg-white dark:bg-background-dark rounded-lg p-6 w-96">
+      <h2 class="text-xl font-bold mb-4">Add New Customer</h2>
+  
+      <form method="POST" action="{{ url_for('create_customer') }}">
+        <input type="text" name="name" placeholder="Full Name" required
+               class="w-full mb-2 p-2 border rounded" />
+  
+        <input type="email" name="email" placeholder="Email Address"
+               class="w-full mb-2 p-2 border rounded" />
+  
+        <input type="text" name="phone" placeholder="Phone Number" required
+               class="w-full mb-2 p-2 border rounded" />
+  
+        <input type="text" name="address" placeholder="Address"
+               class="w-full mb-2 p-2 border rounded" />
+  
+        <button type="submit" class="bg-primary text-white py-2 px-4 rounded mt-2 w-full">
+          Save
+        </button>
+        <button onclick="closeModal()" type="button" class="bg-primary text-white py-2 px-4 rounded mt-2 w-full">
+          Close
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    function openModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('hidden');
+  
+      // Focus the first input inside the modal
+      const firstInput = modal.querySelector('input');
+      if (firstInput) firstInput.focus();
+    }
+  
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('hidden');
+    }
+  
+    // Escape key listener
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    });
+  </script>
+  
         
 
 
@@ -321,58 +319,31 @@
         <div
           class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark"
         >
-          <table
-            class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-          >
-            <thead
-              class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-800"
-            >
-              <tr>
-                <th class="px-6 py-3" scope="col">Product Name</th>
-                <th class="px-6 py-3" scope="col">Stock Level</th>
-                <th class="px-6 py-3" scope="col">Unit Price</th>
-                <th class="px-6 py-3" scope="col">Last Restock</th>
-                <th class="px-6 py-3 text-right" scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-              >
-                
-
-
-
-              {% for product in products %}
-
-              <tr
-              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-            >
-              <th
-                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                scope="row"
-              >
-              {{ product.name }}
-              </th>
-              <td class="px-6 py-4">{{ product.stock }}</td>
-              <td class="px-6 py-4">${{ product.price }}</td>
-              <td class="px-6 py-4">{{ product.last_restocked.strftime('%Y-%m-%d') }}</td>
-              <td class="px-6 py-4 text-right">
-                <a
-                  class="font-medium text-primary hover:underline"
-                  href="{{ url_for('edit_product', product_id=product.id) }}"
-                >
-                  Edit
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-
-
-
-
-            </tbody>
-          </table>
+          <!-- Customer Table -->
+            <table class="min-w-full border border-gray-300">
+                <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border">ID</th>
+                    <th class="px-4 py-2 border">Name</th>
+                    <th class="px-4 py-2 border">Phone</th>
+                    <th class="px-4 py-2 border">Email</th>
+                    <th class="px-4 py-2 border">Points</th>
+                    <th class="px-4 py-2 border">Created At</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in customers %}
+                <tr>
+                    <td class="px-4 py-2 border">{{ c.id }}</td>
+                    <td class="px-4 py-2 border">{{ c.name }}</td>
+                    <td class="px-4 py-2 border">{{ c.phone }}</td>
+                    <td class="px-4 py-2 border">{{ c.email }}</td>
+                    <td class="px-4 py-2 border">{{ c.loyalty_points }}</td>
+                    <td class="px-4 py-2 border">{{ c.created_at }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
       </div>
 
