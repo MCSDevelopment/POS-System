@@ -60,7 +60,6 @@
           class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600 dark:text-gray-300"
         >
           <a class="hover:text-primary" href="order">Order</a>
-          <!-- <a class="hover:text-primary" href="products">Products</a> -->
           <a class="text-primary font-semibold" href="/inventory">Inventory</a>
           <a class="hover:text-primary" href="customers">Customers</a>
           <a class="hover:text-primary" href="#">Reports</a>
@@ -137,7 +136,7 @@
                 </div>
                 <input
                   class="w-full pl-10 pr-4 py-3 rounded-l-lg bg-white dark:bg-background-dark border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                  placeholder="Search products by name, SKU, category, or barcode"
+                  placeholder="Search products by name, SKU or category..."
                   type="text"
                   name="search"
                   value="{{ request.args.get('search', '') }}"
@@ -228,15 +227,15 @@
               <input type="text" name="category" placeholder="Category" required
                     class="w-full mb-2 p-2 border rounded" />
 
-              <input type="text" name="sku" placeholder="Sku" required
-                    class="w-full mb-2 p-2 border rounded" />
-
+            
 
               <input type="number" name="stock" placeholder="Stock Quantity" required
                     class="w-full mb-2 p-2 border rounded" />
 
-              <input type="datetime-local" name="last_restocked" placeholder="Last Restocked"
-                    class="w-full mb-2 p-2 border rounded" />
+              <input type="hidden" 
+                    name="last_restocked" 
+                    class="w-full mb-2 p-2 border rounded"
+                    value="{{ datetime.utcnow().strftime('%Y-%m-%dT%H:%M') }}" />
 
               <input type="number" step="0.01" name="price" placeholder="Price" required
                     class="w-full mb-2 p-2 border rounded" />

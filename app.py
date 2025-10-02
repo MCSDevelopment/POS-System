@@ -22,12 +22,6 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-# Helper function to generate SKU
-def generate_sku():
-    """Generate a random 6-character SKU"""
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-
-
 # ROUTES
 @app.route('/')
 def index():
@@ -62,6 +56,7 @@ def get_user(user_id):
     return jsonify({'id': user.id, 'name': user.name, 'email': user.email, 'role': user.role})
 
 
+# Auth
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -117,8 +112,11 @@ def login():
 
     return render_template('login.html')
 
-
 # --- PRODUCT ROUTES ---
+def generate_sku():
+    """Generate a random 6-character SKU"""
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
 @app.route('/order')
 def order():
     if 'user_id' not in session:
@@ -154,16 +152,16 @@ def add_multiple_products():
                 name="Espresso",
                 category="Drink",
                 sku=generate_sku(),
-                stock=10,
-                price=2.50,
+                stock=9,
+                price=2.75,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
             ),
             Product(
                 name="Cappuccino",
                 category="Drink",
                 sku=generate_sku(),
-                stock=15,
-                price=3.50,
+                stock=5,
+                price=4.50,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
             ),
             Product(
@@ -199,7 +197,6 @@ def add_multiple_products():
         db.session.rollback()
         return f"Error: {str(e)}"
 
-
 # --- INVENTORY PAGE ---
 @app.route('/inventory')
 def inventory():
@@ -225,18 +222,26 @@ def inventory():
     
     # Apply category filter
     if category_filter:
-        query = query.filter_by(category=category_filter)
+        if category_filter == "Low Stock":
+            # 👇 Adjust threshold (e.g., < 10 units = low stock)
+            query = query.filter(Product.stock < 10)
+        else:
+            query = query.filter_by(category=category_filter)
         
     products = query.all()
+
+    # Collect all categories from products (for dropdown)
     categories = sorted({product.category for product in Product.query.all()})
     
+    
     return render_template(
-        'inventory.html', 
-        name=session['user_name'], 
-        products=products, 
-        categories=categories,
-        current_category=category_filter or "All"
-    )
+    'inventory.html', 
+    name=session['user_name'], 
+    products=products, 
+    categories=categories,
+    current_category=category_filter or "All",
+    datetime=datetime   # 👈 pass datetime for use in Jinja
+)
 
 
 # --- PRODUCT ROUTES ---
@@ -294,7 +299,7 @@ def edit_product(product_id):
         flash(f'Product "{product.name}" (SKU: {product.sku}) updated successfully!', 'success')
         return redirect(url_for("inventory"))
 
-    return render_template("product_edit.html", product=product)
+    return render_template("product_edit.html", product=product, datetime=datetime)
 
 
 @app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
@@ -322,7 +327,6 @@ def delete_product(product_id):
 def customers_page():
     customers = Customer.query.all()
     return render_template('customer.html', customers=customers)
-
 
 
 
