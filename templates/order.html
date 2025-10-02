@@ -39,23 +39,165 @@
       </div>
 
       <!-- Totals -->
-      <div class="pt-6 border-t border-gray-200 dark:border-gray-700 text-sm">
-        <div class="flex justify-between mb-2">
-          <span>Subtotal</span>
-          <span id="cart-subtotal" class="font-medium text-gray-900 dark:text-white">$0.00</span>
-        </div>
-        <div class="flex justify-between mb-2">
-          <span>Tax (6%)</span>
-          <span id="cart-tax" class="font-medium text-gray-900 dark:text-white">$0.00</span>
-        </div>
-        <div class="flex justify-between mb-4 text-lg font-bold">
-          <span class="text-gray-900 dark:text-white">Total</span>
-          <span id="cart-total" class="text-gray-900 dark:text-white">$0.00</span>
-        </div>
+      <!-- Totals -->
+<div class="pt-6 border-t border-gray-200 dark:border-gray-700 text-sm">
+  <div class="flex justify-between mb-2">
+    <span>Subtotal</span>
+    <span id="cart-subtotal" class="font-medium">$0.00</span>
+  </div>
+  <div class="flex justify-between mb-2">
+    <span>Tax (6%)</span>
+    <span id="cart-tax" class="font-medium">$0.00</span>
+  </div>
+  <div class="flex justify-between mb-2">
+    <span>Discount</span>
+    <span id="cart-discount" class="font-medium text-red-600">-$0.00</span>
+  </div>
+  <div class="flex justify-between mb-4 text-lg font-bold">
+    <span>Total</span>
+    <span id="cart-total">$0.00</span>
+  </div>
+
 
         <div class="space-y-3">
-          <button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Add Discount</button>
-          <button class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">Loyalty</button>
+
+          <!-- Trigger Button -->
+      <button onclick="openDiscountModal()" 
+      class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">
+      Add Discount
+      </button>
+
+      <!-- Discount Modal -->
+    <div id="discountModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+      <div class="bg-white dark:bg-background-dark rounded-2xl shadow-lg p-6 w-96 relative">
+      <h2 class="text-xl font-bold mb-4 text-center">Apply Discount</h2>
+
+      <!-- Toggle Option -->
+      <div class="flex justify-center mb-4 space-x-4">
+
+        <button id="percentTab" onclick="showDiscountType('percent')" 
+              class="px-4 py-2 rounded-lg font-semibold bg-primary text-white">
+        Percentage
+        </button>
+          
+        <button id="dollarTab" onclick="showDiscountType('dollar')" 
+              class="px-4 py-2 rounded-lg font-semibold bg-gray-200 dark:bg-gray-700">
+        Dollar
+        </button>
+      </div>
+
+      <!-- Percentage View -->
+      <div id="percentView" class="space-y-3">
+        <button onclick="applyPercentDiscount(10)" class="w-full py-2 rounded-lg border hover:bg-primary hover:text-white">10%</button>
+        <button onclick="applyPercentDiscount(15)" class="w-full py-2 rounded-lg border hover:bg-primary hover:text-white">15%</button>
+        <button onclick="applyPercentDiscount(20)" class="w-full py-2 rounded-lg border hover:bg-primary hover:text-white">20%</button>
+      </div>
+
+      <!-- Dollar View -->
+      <div id="dollarView" class="hidden space-y-3">
+          <input id="dollarInput" type="number" step="0.01" placeholder="Enter dollar amount"
+                class="w-full border rounded-lg p-2" />
+          <button onclick="applyDollarDiscount(document.getElementById('dollarInput').value)" 
+                  class="w-full py-2 rounded-lg bg-primary text-white">Apply Dollar Discount
+          </button>
+      </div>
+
+
+      <!-- Actions -->
+    <div class="flex justify-between mt-6">
+
+      <button onclick="closeDiscountModal()" 
+            class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 font-semibold">
+      Cancel
+      </button>
+
+      <button class="px-4 py-2 rounded-lg bg-primary text-white font-semibold">
+      Apply
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openDiscountModal() {
+document.getElementById("discountModal").classList.remove("hidden");
+}
+
+function closeDiscountModal() {
+document.getElementById("discountModal").classList.add("hidden");
+}
+
+function showDiscountType(type) {
+let percentView = document.getElementById("percentView");
+let dollarView = document.getElementById("dollarView");
+let percentTab = document.getElementById("percentTab");
+let dollarTab = document.getElementById("dollarTab");
+
+if (type === "percent") {
+percentView.classList.remove("hidden");
+dollarView.classList.add("hidden");
+percentTab.classList.add("bg-primary","text-white");
+percentTab.classList.remove("bg-gray-200","dark:bg-gray-700");
+dollarTab.classList.remove("bg-primary","text-white");
+dollarTab.classList.add("bg-gray-200","dark:bg-gray-700");
+} else {
+percentView.classList.add("hidden");
+dollarView.classList.remove("hidden");
+dollarTab.classList.add("bg-primary","text-white");
+dollarTab.classList.remove("bg-gray-200","dark:bg-gray-700");
+percentTab.classList.remove("bg-primary","text-white");
+percentTab.classList.add("bg-gray-200","dark:bg-gray-700");
+}
+}
+</script>
+
+
+
+          
+         <!-- Trigger Button -->
+<button onclick="openLoyaltyModal()" 
+class="w-full h-12 rounded-lg bg-primary/20 dark:bg-primary/30 text-primary font-bold">
+Loyalty
+</button>
+
+<!-- Loyalty Modal -->
+<div id="loyaltyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div class="bg-white dark:bg-background-dark rounded-2xl shadow-lg p-6 w-96 relative">
+<h2 class="text-xl font-bold mb-4 text-center">Loyalty Lookup</h2>
+
+<!-- Phone Number Input -->
+<form class="space-y-4">
+<input type="tel" name="phone" placeholder="Enter phone number"
+     pattern="[0-9]{10}" 
+     class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary"
+     required />
+
+<!-- Actions -->
+<div class="flex justify-between pt-4">
+<button type="button" onclick="closeLoyaltyModal()" 
+        class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 font-semibold">
+  Cancel
+</button>
+<button type="submit" 
+        class="px-4 py-2 rounded-lg bg-primary text-white font-semibold">
+  Submit
+</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+function openLoyaltyModal() {
+document.getElementById("loyaltyModal").classList.remove("hidden");
+}
+
+function closeLoyaltyModal() {
+document.getElementById("loyaltyModal").classList.add("hidden");
+}
+</script>
+
           <button class="w-full h-12 rounded-lg bg-primary text-white font-bold text-lg">Pay
             <a href="payment"></a>
           </button>
@@ -113,6 +255,7 @@
 
 <script>
   let cart = {};
+  let discount = { type: null, value: 0 }; // {type: "percent"|"dollar", value: number}
 
   function addToCart(name, price) {
     if (cart[name]) {
@@ -127,6 +270,7 @@
     const cartItems = document.getElementById("cart-items");
     const subtotalEl = document.getElementById("cart-subtotal");
     const taxEl = document.getElementById("cart-tax");
+    const discountEl = document.getElementById("cart-discount");
     const totalEl = document.getElementById("cart-total");
 
     cartItems.innerHTML = "";
@@ -143,15 +287,24 @@
       cartItems.appendChild(li);
     }
 
-    const tax = subtotal * 0.06;
-    const total = subtotal + tax;
+    let tax = subtotal * 0.06;
+    let discountAmount = 0;
+
+    if (discount.type === "percent") {
+      discountAmount = subtotal * (discount.value / 100);
+    } else if (discount.type === "dollar") {
+      discountAmount = discount.value;
+    }
+
+    const total = subtotal + tax - discountAmount;
 
     subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
     taxEl.innerText = `$${tax.toFixed(2)}`;
-    totalEl.innerText = `$${total.toFixed(2)}`;
+    discountEl.innerText = `-$${discountAmount.toFixed(2)}`;
+    totalEl.innerText = `$${Math.max(total, 0).toFixed(2)}`;
   }
 
-  // Attach click listeners to product cards
+  // Product card click
   document.querySelectorAll(".product").forEach(el => {
     el.addEventListener("click", () => {
       const name = el.dataset.name;
@@ -159,6 +312,20 @@
       addToCart(name, price);
     });
   });
+
+  // Discount handling
+  function applyPercentDiscount(percent) {
+    discount = { type: "percent", value: percent };
+    renderCart();
+    closeDiscountModal();
+  }
+
+  function applyDollarDiscount(amount) {
+    discount = { type: "dollar", value: parseFloat(amount) || 0 };
+    renderCart();
+    closeDiscountModal();
+  }
 </script>
+
 </body>
 </html>
