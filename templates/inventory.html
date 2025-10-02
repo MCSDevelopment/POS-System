@@ -62,7 +62,7 @@
           <a class="hover:text-primary" href="order">Order</a>
           <!-- <a class="hover:text-primary" href="products">Products</a> -->
           <a class="text-primary font-semibold" href="/inventory">Inventory</a>
-          <a class="hover:text-primary" href="#">Customers</a>
+          <a class="hover:text-primary" href="customers">Customers</a>
           <a class="hover:text-primary" href="#">Reports</a>
         </nav>
 
@@ -98,11 +98,11 @@
             Products
           </h1>
           <div class="flex items-center gap-2">
-            <button
+            <!-- <button
               class="bg-primary/20 dark:bg-primary/30 text-primary font-semibold py-2 px-4 rounded-lg text-sm hover:bg-primary/30 dark:hover:bg-primary/40"
             >
               Adjust Stock
-            </button>
+            </button> -->
             <button onclick="openModal()" class="bg-primary text-white font-semibold py-2 px-4 rounded-lg text-sm hover:opacity-90">
               Add New Product
             </button>
@@ -228,6 +228,10 @@
               <input type="text" name="category" placeholder="Category" required
                     class="w-full mb-2 p-2 border rounded" />
 
+              <input type="text" name="sku" placeholder="Sku" required
+                    class="w-full mb-2 p-2 border rounded" />
+
+
               <input type="number" name="stock" placeholder="Stock Quantity" required
                     class="w-full mb-2 p-2 border rounded" />
 
@@ -251,7 +255,24 @@
         </div>
 
 
-            <!-- opening and closing add to new botton form -->
+        
+
+          <button
+            class="flex items-center gap-2 rounded-lg bg-white dark:bg-background-dark border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <!-- Special Low Stock option -->
+                <a 
+                href="{{ url_for('inventory') }}?category=Low+Stock" 
+                class="text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800"
+                @click="selected='Low Stock'"
+                >
+                Low Stock
+                </a>
+
+          </button>
+        </div>
+
+        <!-- opening and closing add to new botton form -->
         <script>
           function openModal() {
             const modal = document.getElementById('modal');
@@ -274,47 +295,6 @@
             }
           });
         </script>
-        
-
-
-          <button
-            class="flex items-center gap-2 rounded-lg bg-white dark:bg-background-dark border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-          >
-            <span>Supplier</span>
-            <svg
-              fill="currentColor"
-              height="16"
-              viewBox="0 0 256 256"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"
-              ></path>
-            </svg>
-          </button>
-
-          <button
-            class="flex items-center gap-2 rounded-lg bg-white dark:bg-background-dark border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-          >
-            <span
-              >Stock Status:
-              <span class="font-bold text-primary">Low Stock</span></span
-            >
-            <svg
-              fill="currentColor"
-              height="16"
-              viewBox="0 0 256 256"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
 
 
         <!-- end of buttons start of product list -->
@@ -332,6 +312,8 @@
                 <th class="px-6 py-3" scope="col">Stock Level</th>
                 <th class="px-6 py-3" scope="col">Unit Price</th>
                 <th class="px-6 py-3" scope="col">Last Restock</th>
+                <th class="px-6 py-3" scope="col">Sku</th>
+
                 <th class="px-6 py-3 text-right" scope="col">Actions</th>
               </tr>
             </thead>
@@ -357,12 +339,17 @@
               <td class="px-6 py-4">{{ product.stock }}</td>
               <td class="px-6 py-4">${{ product.price }}</td>
               <td class="px-6 py-4">{{ product.last_restocked.strftime('%Y-%m-%d') }}</td>
+              <td class="px-6 py-4">{{ product.sku }}</td>
+
               <td class="px-6 py-4 text-right">
-                <a
-                  class="font-medium text-primary hover:underline"
-                  href="{{ url_for('edit_product', product_id=product.id) }}"
-                >
+                <a class="font-medium text-primary hover:underline mr-3" 
+                   href="{{ url_for('edit_product', product_id=product.id) }}">
                   Edit
+                </a>
+                <a class="font-medium text-red-600 dark:text-red-500 hover:underline" 
+                   href="{{ url_for('delete_product', product_id=product.id) }}"
+                   onclick="return confirm('Are you sure you want to delete {{ product.name }}? This action cannot be undone.')">
+                  Delete
                 </a>
               </td>
             </tr>

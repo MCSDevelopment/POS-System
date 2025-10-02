@@ -6,6 +6,9 @@ import os
 import secrets
 from datetime import datetime
 from models import User, Product, db, Order, OrderItem, Customer
+import random
+import string
+
 app = Flask(__name__)
 
 # Config
@@ -15,12 +18,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = secrets.token_hex(16)
 
 # Initialize db + migrate
-
 db.init_app(app) 
 migrate = Migrate(app, db)
 
 
-
+# Helper function to generate SKU
+def generate_sku():
+    """Generate a random 6-character SKU"""
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
 
 # ROUTES
@@ -128,7 +133,15 @@ def order():
 def get_products():
     products = Product.query.all()
     return jsonify([
-        {"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "category": p.category, "image_url": p.image_url}
+        {
+            "id": p.id, 
+            "name": p.name, 
+            "price": p.price, 
+            "stock": p.stock, 
+            "category": p.category, 
+            "sku": p.sku,
+            "image_url": p.image_url
+        }
         for p in products
     ])
 
@@ -140,6 +153,7 @@ def add_multiple_products():
             Product(
                 name="Espresso",
                 category="Drink",
+                sku=generate_sku(),
                 stock=10,
                 price=2.50,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
@@ -147,6 +161,7 @@ def add_multiple_products():
             Product(
                 name="Cappuccino",
                 category="Drink",
+                sku=generate_sku(),
                 stock=15,
                 price=3.50,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
@@ -154,6 +169,7 @@ def add_multiple_products():
             Product(
                 name="Latte",
                 category="Drink",
+                sku=generate_sku(),
                 stock=20,
                 price=4.00,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDLD_S6LvEpZF9j_ER8EfiStDf3DFPwpFU2ulokzowa5A4gMHM2E2i2yXWiblv5hL6Xx8Dn6k0bJ_Do7V33qGNRpVvDz1OsTE4Sqw_jUIM-KoeVEF-qRggqsLjycTd2C3yQmb3htXY5cGeoIs-c0RgdfCOQILa9Gxb-8k1Z1gOKUzvKFTrbUuFM-BO1ao0cG2Hkf_J_4Q_fSKh1FgyCfpBWooTRTbAGUhIclBsSoze218tpVl1rvxx6Ip2vatEVXCZQtJOiroH3pvY"
@@ -161,6 +177,7 @@ def add_multiple_products():
             Product(
                 name="Iced Coffee",
                 category="Drink",
+                sku=generate_sku(),
                 stock=10,
                 price=3.00,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuAj8EpLVI56YxMycwpZRJvLxvVzpE-QfVwjqdzdrMIEUX2qczthx5VbMy_LpjwzIsWQvGV3GyFSpq2Wl4LRXZ5Rs2HAwqtobp6WYCIhTqDMgV-Y8f6xq4aSXTPf8PJSMhzm-OvHZsgxMkzm0n7SpXYQI8RvgLaoeDWN3fCaPsPt1xe4k3utvkpqxvT6D1N0DAfQbCDLYps_k8a3e6R7SpNAM0GNfIibFw0WRQZvwpzhryAEWjVMPc1P01N0yWPlET0TdSRiUpwvL1M"
@@ -168,6 +185,7 @@ def add_multiple_products():
             Product(
                 name="Pastry",
                 category="Food",
+                sku=generate_sku(),
                 stock=30,
                 price=2.00,
                 image_url="https://lh3.googleusercontent.com/aida-public/AB6AXuDHnAxhppAEV661r6lI8-XGoLCcsyVfQdg12Q1U2TDFLfY0QN7nYzEREHQbR8D8PwfEMawGds2yxd7GvWwShQPhHLEcUUNqWcnH7EDL8wNitIo2ccKg1YPqh6uyOYL4Ks57PUZ8JYFi_XZQm40jwJzu4j4vlHC0T7b0XjoNTStI3lgvlVIoOJ2lmgNNFnZKO0P1eyEwYSYXIm4s7BpF7V5OPXNdy1Drv_aQOY5nI09G492by4ZTP4VmtWpP7pxZcwYNqD4_vwZQ2fI"
@@ -182,9 +200,6 @@ def add_multiple_products():
         return f"Error: {str(e)}"
 
 
-
-
-
 # --- INVENTORY PAGE ---
 @app.route('/inventory')
 def inventory():
@@ -193,13 +208,26 @@ def inventory():
         return redirect(url_for('login'))
 
     category_filter = request.args.get('category')
+    search_query = request.args.get('search', '').strip()
     
+    # Start with base query
+    query = Product.query
+    
+    # Apply search filter
+    if search_query:
+        query = query.filter(
+            db.or_(
+                Product.name.ilike(f'%{search_query}%'),
+                Product.sku.ilike(f'%{search_query}%'),
+                Product.category.ilike(f'%{search_query}%')
+            )
+        )
+    
+    # Apply category filter
     if category_filter:
-        products = Product.query.filter_by(category=category_filter).all()
-    else:
-        products = Product.query.all()
-        category_filter = "Category"  # default text when no filter
-
+        query = query.filter_by(category=category_filter)
+        
+    products = query.all()
     categories = sorted({product.category for product in Product.query.all()})
     
     return render_template(
@@ -207,8 +235,9 @@ def inventory():
         name=session['user_name'], 
         products=products, 
         categories=categories,
-        current_category=category_filter
+        current_category=category_filter or "All"
     )
+
 
 # --- PRODUCT ROUTES ---
 @app.route('/add_product', methods=['POST'])
@@ -219,6 +248,7 @@ def add_product():
 
     name = request.form['name']
     category = request.form['category']
+    sku = request.form.get('sku', generate_sku())  # Use provided SKU or generate one
     stock = int(request.form['stock'])
     last_restocked = datetime.strptime(request.form['last_restocked'], '%Y-%m-%dT%H:%M')
     price = float(request.form['price'])
@@ -227,6 +257,7 @@ def add_product():
     new_product = Product(
         name=name,
         category=category,
+        sku=sku,
         stock=stock,
         last_restocked=last_restocked,
         price=price,
@@ -234,18 +265,25 @@ def add_product():
     )
     db.session.add(new_product)
     db.session.commit()
+    flash(f'Product "{name}" (SKU: {sku}) added successfully!', 'success')
     return redirect(url_for('inventory'))
 
-# edit product form
 
+# Edit product form
 @app.route("/product/<int:product_id>/edit", methods=["GET", "POST"])
 def edit_product(product_id):
+    if 'user_id' not in session or session['user_role'] not in ['admin', 'employee']:
+        flash('You are not authorized to edit products.')
+        return redirect(url_for('inventory'))
+        
     product = Product.query.get_or_404(product_id)
 
     if request.method == "POST":
         product.name = request.form["name"]
-        product.stock = int(request.form["stock"])   # convert to int
-        product.price = float(request.form["price"]) # convert to float
+        product.category = request.form.get("category", product.category)
+        product.sku = request.form.get("sku", product.sku)
+        product.stock = int(request.form["stock"])
+        product.price = float(request.form["price"])
 
         # Convert the string 'YYYY-MM-DD' into a Python date object
         product.last_restocked = datetime.strptime(
@@ -253,18 +291,38 @@ def edit_product(product_id):
         ).date()
 
         db.session.commit()
+        flash(f'Product "{product.name}" (SKU: {product.sku}) updated successfully!', 'success')
         return redirect(url_for("inventory"))
 
     return render_template("product_edit.html", product=product)
 
 
+@app.route('/delete_product/<int:product_id>', methods=['GET', 'POST'])
+def delete_product(product_id):
+    if 'user_id' not in session or session['user_role'] not in ['admin', 'employee']:
+        flash('You are not authorized to delete products.', 'error')
+        return redirect(url_for('inventory'))
+    
+    product = Product.query.get_or_404(product_id)
+    product_name = product.name
+    product_sku = product.sku
+    
+    try:
+        db.session.delete(product)
+        db.session.commit()
+        flash(f'Product "{product_name}" (SKU: {product_sku}) has been deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting product: {str(e)}', 'error')
+    
+    return redirect(url_for('inventory'))
 
 
-
-@app.route('/customers-page')
+@app.route('/customers')
 def customers_page():
     customers = Customer.query.all()
     return render_template('customer.html', customers=customers)
+
 
 
 
@@ -288,7 +346,7 @@ def create_customer():
     return redirect(url_for('order'))
 
 
-@app.route('/customers', methods=['GET'])
+@app.route('/customersPage', methods=['GET'])
 def get_customers():
     customers = Customer.query.all()
     return jsonify([
@@ -361,5 +419,7 @@ def get_customer_orders(customer_id):
             ]
         } for o in orders
     ])
+
+
 if __name__ == '__main__':
     app.run(debug=True)

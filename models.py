@@ -39,6 +39,8 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     category = db.Column(db.String(50), nullable=False, default="General")
+    sku = db.Column(db.String(6), nullable=False, default="N/A")
+
     stock = db.Column(db.Integer, nullable=False, default=0)
     last_restocked = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     price = db.Column(db.Float, nullable=False)

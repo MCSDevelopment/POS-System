@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Downloads/stitch_pos_home_screen/sign_up_screen"
+		},
+		{
+			"path": "../Downloads/stitch_pos_home_screen/product_&_inventory_screen"
+		},
+		{
+			"path": "../Downloads/stitch_pos_home_screen/pos_payment_screen"
+		},
+		{
+			"path": "../Downloads/stitch_pos_home_screen/pos_home_screen"
+		},
+		{
+			"path": "../Downloads/stitch_pos_home_screen/login_screen"
+		}
+	],
+	"settings": {}
+}
